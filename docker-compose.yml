@@ -1,0 +1,30 @@
+services:
+  web:
+    build: .
+    ports:
+      - "4173:80"
+    environment:
+      VITE_API_URL: http://localhost:4000/api
+    depends_on:
+      - postgres
+      - redis
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: vyora
+      POSTGRES_USER: vyora
+      POSTGRES_PASSWORD: change-me-in-local-only
+    ports:
+      - "5432:5432"
+    volumes:
+      - vyora-postgres:/var/lib/postgresql/data
+      - ./db/migrations:/docker-entrypoint-initdb.d:ro
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+volumes:
+  vyora-postgres:
