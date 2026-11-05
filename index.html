@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Browser — Дизайн-концепт v0.1</title>
+<meta name="description" content="Nova Browser — мобильный браузер в стиле космоса. Первая версия дизайна: чёрные градиенты, светящийся логотип.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-100 -100 200 200'%3E%3Cpath fill='%23fff' d='M0,-92 C10,-34 34,-10 92,0 C34,10 10,34 0,92 C-10,34 -34,10 -92,0 C-34,-10 -10,-34 0,-92 Z'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --void:#000000;
+  --space-1:#060608;
+  --space-2:#0b0b10;
+  --space-3:#121218;
+  --space-4:#1a1a22;
+  --ice:#f5f5f7;
+  --smoke:#8e8e98;
+  --dim:#5c5c66;
+  --line:rgba(255,255,255,.08);
+  --line-strong:rgba(255,255,255,.14);
+  --glass:rgba(16,16,22,.55);
+  --grad-logo:linear-gradient(180deg,#ffffff 0%,#dcdce2 30%,#6f6f7a 62%,#101014 100%);
+  --grad-logo-rev:linear-gradient(180deg,#101014 0%,#4a4a54 38%,#c9c9d0 72%,#ffffff 100%);
+  --grad-hair:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--void);
+  color:var(--ice);
+  font-family:var(--font);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:rgba(255,255,255,.85);color:#000}
+
+/* ============ STARFIELD (page) ============ */
+.starfield{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--dur,3s) ease-in-out infinite alternate;animation-delay:var(--delay,0s)}
+@keyframes twinkle{from{opacity:.12;transform:scale(.7)}to{opacity:.85;transform:scale(1.15)}}
+
+/* ============ HERO ============ */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.08) brightness(.9);opacity:.75}
+.hero-bg::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(ellipse 90% 70% at 50% 45%,rgba(0,0,0,.25),rgba(0,0,0,.86) 78%),
+  linear-gradient(180deg,rgba(0,0,0,.55),transparent 22%,transparent 68%,#000 100%);}
+.hero-inner{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center}
+.hero-halo{position:absolute;width:640px;height:640px;left:50%;top:-160px;transform:translateX(-50%);background:radial-gradient(circle,rgba(255,255,255,.16),transparent 62%);filter:blur(10px);pointer-events:none}
+.nova-mark{width:172px;height:172px;display:block;filter:drop-shadow(0 0 34px rgba(255,255,255,.35)) drop-shadow(0 0 90px rgba(255,255,255,.18));animation:markPulse 5s ease-in-out infinite}
+@keyframes markPulse{0%,100%{filter:drop-shadow(0 0 30px rgba(255,255,255,.3)) drop-shadow(0 0 80px rgba(255,255,255,.15))}50%{filter:drop-shadow(0 0 46px rgba(255,255,255,.5)) drop-shadow(0 0 120px rgba(255,255,255,.28))}}
+.orbit-a{transform-origin:0 0;animation:spin 26s linear infinite}
+.orbit-b{transform-origin:0 0;animation:spin 40s linear infinite reverse}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero-title{margin-top:38px;font-size:clamp(56px,10vw,116px);font-weight:800;letter-spacing:.14em;line-height:.95;background:var(--grad-logo);-webkit-background-clip:text;background-clip:text;color:transparent;padding-left:.14em}
+.hero-sub{margin-top:10px;font-size:clamp(13px,2.2vw,18px);font-weight:500;letter-spacing:.62em;color:var(--smoke);text-transform:uppercase;padding-left:.62em}
+.hero-tag{margin-top:26px;max-width:520px;font-size:16px;line-height:1.7;color:#b9b9c2;font-weight:300}
+.hero-tag strong{color:#fff;font-weight:600}
+.badges{margin-top:34px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.badge{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#c9c9d2;padding:9px 16px;border-radius:999px;border:1px solid var(--line-strong);background:rgba(255,255,255,.04);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.scroll-hint{position:absolute;bottom:34px;left:50%;transform:translateX(-50%);z-index:2;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);display:flex;flex-direction:column;align-items:center;gap:12px}
+.scroll-hint::after{content:"";width:1px;height:44px;background:linear-gradient(180deg,rgba(255,255,255,.5),transparent);animation:hintDrop 2.2s ease-in-out infinite}
+@keyframes hintDrop{0%{transform:scaleY(.2);transform-origin:top;opacity:0}45%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);transform-origin:bottom;opacity:0}}
+
+/* ============ SECTIONS ============ */
+.section{position:relative;padding:130px 24px;max-width:1280px;margin:0 auto}
+.section-head{margin-bottom:72px}
+.kicker{display:flex;align-items:center;gap:16px;font-size:11px;letter-spacing:.42em;text-transform:uppercase;color:var(--smoke)}
+.kicker::before{content:"";width:44px;height:1px;background:var(--grad-hair)}
+.section h2{margin-top:20px;font-size:clamp(32px,5vw,52px);font-weight:700;letter-spacing:-.015em;line-height:1.08}
+.section h2 .grad{background:var(--grad-logo);-webkit-background-clip:text;background-clip:text;color:transparent}
+.section-desc{margin-top:18px;max-width:560px;color:var(--smoke);font-size:15px;line-height:1.75;font-weight:300}
+
+/* ============ PHONES ============ */
+.phone-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,390px));gap:64px 44px;justify-content:center}
+.phone-wrap{display:flex;flex-direction:column;align-items:center;gap:22px}
+.phone{
+  position:relative;width:390px;height:844px;border-radius:56px;
+  background:linear-gradient(160deg,#2a2a32,#0c0c10 30%,#0c0c10 70%,#232329);
+  padding:5px;box-shadow:0 60px 120px -30px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.07),0 0 80px rgba(255,255,255,.05);
+  transition:transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s;
+}
+.phone:hover{transform:translateY(-10px);box-shadow:0 80px 140px -30px rgba(0,0,0,.95),0 0 0 1px rgba(255,255,255,.12),0 0 110px rgba(255,255,255,.1)}
+.phone-screen{position:relative;width:100%;height:100%;border-radius:51px;overflow:hidden;background:#000}
+.island{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:118px;height:34px;border-radius:999px;background:#000;z-index:60;border:1px solid rgba(255,255,255,.05)}
+.status-bar{position:absolute;top:0;left:0;right:0;height:58px;display:flex;align-items:center;justify-content:space-between;padding:18px 32px 0;z-index:55;font-size:15px;font-weight:600;letter-spacing:.02em}
+.status-icons{display:flex;align-items:center;gap:7px}
+.home-indicator{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);width:136px;height:5px;border-radius:999px;background:rgba(255,255,255,.85);z-index:70}
+.phone-caption{text-align:center}
+.phone-caption .no{font-size:11px;letter-spacing:.4em;color:var(--dim);text-transform:uppercase}
+.phone-caption .nm{margin-top:8px;font-size:17px;font-weight:600;letter-spacing:.01em}
+.phone-caption .ds{margin-top:6px;font-size:13px;color:var(--smoke);font-weight:300}
+
+/* screen shared */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column}
+.scr-stars{position:absolute;inset:0;z-index:0}
+.scr-wall{position:absolute;inset:0;z-index:0}
+.scr-wall img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) brightness(.85)}
+.scr-wall::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 120% 80% at 50% 10%,rgba(0,0,0,.1),rgba(0,0,0,.75) 75%)}
+
+/* ============ SCREEN 1 : HOME ============ */
+.home-content{position:relative;z-index:5;flex:1;display:flex;flex-direction:column;align-items:center;padding:110px 26px 130px}
+.home-greet{font-size:13px;letter-spacing:.28em;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:9px}
+.home-greet .dot{width:5px;height:5px;border-radius:50%;background:#fff;box-shadow:0 0 10px #fff;animation:twinkle 2.4s ease-in-out infinite alternate}
+.home-mark{width:118px;height:118px;margin-top:46px;filter:drop-shadow(0 0 26px rgba(255,255,255,.38)) drop-shadow(0 0 70px rgba(255,255,255,.16))}
+.home-word{margin-top:22px;font-size:44px;font-weight:800;letter-spacing:.18em;background:var(--grad-logo);-webkit-background-clip:text;background-clip:text;color:transparent;padding-left:.18em}
+.home-tag{margin-top:8px;font-size:11px;letter-spacing:.46em;text-transform:uppercase;color:var(--dim);padding-left:.46em}
+.search-pill{margin-top:52px;width:100%;height:58px;border-radius:999px;display:flex;align-items:center;gap:13px;padding:0 22px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 18px 44px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.09)}
+.search-pill .ph{flex:1;font-size:15px;color:#77777f;font-weight:400}
+.quick-row{margin-top:42px;width:100%;display:flex;justify-content:space-between;gap:12px}
+.quick{display:flex;flex-direction:column;align-items:center;gap:11px;width:72px}
+.quick-ic{width:60px;height:60px;border-radius:20px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:#d7d7de}
+.quick-lb{font-size:11px;color:var(--smoke);font-weight:400;letter-spacing:.02em}
+.home-note{margin-top:auto;display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#3f3f48}
+.toolbar{position:absolute;left:20px;right:20px;bottom:30px;height:64px;border-radius:26px;display:flex;align-items:center;justify-content:space-around;padding:0 18px;background:rgba(14,14,20,.62);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);z-index:40;box-shadow:0 24px 50px rgba(0,0,0,.55)}
+.tb-btn{position:relative;display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:14px;color:#dcdce3}
+.tb-btn.dimmed{color:#42424b}
+.tb-badge{position:absolute;top:2px;right:2px;min-width:16px;height:16px;border-radius:8px;background:#fff;color:#000;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px}
+
+/* ============ SCREEN 2 : BROWSE ============ */
+.site{position:relative;z-index:5;flex:1;overflow:hidden;display:flex;flex-direction:column;padding:74px 22px 130px}
+.site-top{display:flex;align-items:center;justify-content:space-between}
+.site-brand{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;letter-spacing:.26em;text-transform:uppercase}
+.site-brand .m{width:22px;height:22px;filter:drop-shadow(0 0 8px rgba(255,255,255,.5))}
+.site-menu-dots{color:var(--dim);letter-spacing:2px}
+.site-kicker{margin-top:34px;font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:#9a9aa4}
+.site-h1{margin-top:14px;font-size:27px;font-weight:700;line-height:1.22;letter-spacing:-.01em}
+.site-meta{margin-top:12px;display:flex;gap:14px;font-size:11px;color:var(--dim)}
+.site-hero-img{margin-top:22px;height:196px;border-radius:20px;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.site-hero-img .bg{position:absolute;inset:0;background:
+  radial-gradient(circle at 72% 30%,rgba(255,255,255,.5),transparent 26%),
+  radial-gradient(ellipse 120% 100% at 30% 80%,rgba(255,255,255,.12),transparent 55%),
+  linear-gradient(160deg,#0a0a10,#17171f 55%,#050508);}
+.site-hero-img .cap{position:absolute;left:14px;bottom:12px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.site-p{margin-top:20px;font-size:13.5px;line-height:1.8;color:#b4b4be;font-weight:300}
+.site-quote{margin-top:22px;padding:16px 18px;border-left:2px solid transparent;border-image:linear-gradient(180deg,#fff,transparent) 1;background:rgba(255,255,255,.03);border-radius:0 14px 14px 0;font-size:14px;line-height:1.6;font-style:italic;color:#e4e4ea}
+.bottom-bar{position:absolute;left:20px;right:20px;bottom:30px;height:64px;border-radius:26px;display:flex;align-items:center;gap:8px;padding:0 12px;background:rgba(14,14,20,.68);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);z-index:40;box-shadow:0 24px 50px rgba(0,0,0,.6)}
+.url-pill{flex:1;height:44px;border-radius:16px;display:flex;align-items:center;gap:9px;padding:0 14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:13px;color:#cfcfd8}
+.url-pill .lock{opacity:.85}
+.url-pill .dom{color:#fff;font-weight:500}
+.progress{position:absolute;top:0;left:26px;right:26px;height:2.5px;border-radius:2px;background:rgba(255,255,255,.12);z-index:45;overflow:hidden}
+.progress i{display:block;width:68%;height:100%;background:linear-gradient(90deg,transparent,#fff);border-radius:2px}
+
+/* ============ SCREEN 3 : TABS ============ */
+.tabs-scr{position:relative;z-index:5;flex:1;display:flex;flex-direction:column;padding:74px 22px 130px}
+.tabs-head{display:flex;align-items:center;justify-content:space-between}
+.tabs-title{font-size:28px;font-weight:700;letter-spacing:-.01em}
+.tabs-close{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--smoke);border:1px solid var(--line-strong);padding:9px 15px;border-radius:999px}
+.tabs-grid{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.tab-card{position:relative;height:196px;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);display:flex;flex-direction:column}
+.tab-card.active{border-color:rgba(255,255,255,.3);box-shadow:0 0 34px rgba(255,255,255,.12),inset 0 1px 0 rgba(255,255,255,.14)}
+.tab-head{display:flex;align-items:center;gap:8px;padding:12px 12px 8px}
+.fav{width:16px;height:16px;border-radius:5px;background:linear-gradient(140deg,#fff,#7a7a84);flex:none}
+.fav.d2{background:linear-gradient(140deg,#c7c7cf,#3c3c45)}
+.fav.d3{background:linear-gradient(140deg,#8b8b95,#1c1c23)}
+.tab-name{flex:1;font-size:11px;font-weight:500;color:#d9d9e0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab-x{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#aeaeb8;font-size:11px;flex:none}
+.tab-prev{flex:1;margin:2px 10px 10px;border-radius:12px;background:linear-gradient(165deg,#101016,#1b1b24 60%,#0a0a0f);position:relative;overflow:hidden}
+.tab-prev .mini-stars{position:absolute;inset:0}
+.tab-prev .mini-line{position:absolute;left:10px;right:10px;height:5px;border-radius:3px;background:rgba(255,255,255,.14)}
+.tab-prev .mini-line.w2{width:55%;top:26px}
+.tab-prev .mini-line.w3{width:72%;top:38px}
+.tab-prev .mini-hero{position:absolute;top:8px;left:10px;right:10px;height:12px;border-radius:6px;background:linear-gradient(90deg,rgba(255,255,255,.34),rgba(255,255,255,.06))}
+.tab-new{border:1.5px dashed rgba(255,255,255,.22);background:rgba(255,255,255,.02);align-items:center;justify-content:center;gap:12px;display:flex;flex-direction:column}
+.tab-new .plus{width:44px;height:44px;border-radius:15px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff}
+.tab-new .lbl{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--smoke)}
+.fab{position:absolute;left:50%;transform:translateX(-50%);bottom:38px;width:64px;height:64px;border-radius:22px;background:linear-gradient(160deg,#fff,#c3c3cb 55%,#6e6e78);display:flex;align-items:center;justify-content:center;color:#000;box-shadow:0 22px 44px rgba(0,0,0,.6),0 0 44px rgba(255,255,255,.28);z-index:40}
+
+/* ============ SCREEN 4 : MENU ============ */
+.menu-scr{position:relative;z-index:5;flex:1}
+.menu-backdrop{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.86));backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.menu-ghost{position:absolute;top:80px;left:26px;right:26px;opacity:.25}
+.ghost-line{height:12px;border-radius:7px;background:rgba(255,255,255,.25);margin-bottom:12px}
+.ghost-line.s{width:62%}
+.ghost-block{height:150px;border-radius:18px;background:rgba(255,255,255,.12);margin:18px 0}
+.sheet{position:absolute;left:12px;right:12px;bottom:14px;border-radius:34px;background:rgba(17,17,24,.82);border:1px solid rgba(255,255,255,.11);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);padding:14px 18px 26px;box-shadow:0 -20px 60px rgba(0,0,0,.6)}
+.handle{width:42px;height:5px;border-radius:3px;background:rgba(255,255,255,.22);margin:2px auto 18px}
+.menu-title{font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);text-align:center}
+.menu-grid{margin-top:20px;display:grid;grid-template-columns:repeat(4,1fr);gap:18px 8px}
+.mi{display:flex;flex-direction:column;align-items:center;gap:9px}
+.mi-ic{width:52px;height:52px;border-radius:17px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;justify-content:center;color:#e7e7ee}
+.mi-lb{font-size:10px;color:var(--smoke);text-align:center;letter-spacing:.02em}
+.ultra{margin-top:22px;border-radius:20px;padding:1px;background:linear-gradient(120deg,rgba(255,255,255,.65),rgba(255,255,255,.08) 40%,rgba(255,255,255,.32))}
+.ultra-in{border-radius:19px;background:linear-gradient(140deg,#101017,#0a0a0e);padding:16px 18px;display:flex;align-items:center;gap:14px}
+.ultra-mark{width:38px;height:38px;flex:none;filter:drop-shadow(0 0 12px rgba(255,255,255,.4))}
+.ultra-tx{flex:1}
+.ultra-tx b{font-size:13px;font-weight:600;display:block}
+.ultra-tx span{font-size:11px;color:var(--smoke);font-weight:300}
+.ultra-btn{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#000;background:#fff;border-radius:999px;padding:9px 14px;flex:none}
+
+/* ============ LOGO SYSTEM ============ */
+.logo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px}
+.logo-card{border-radius:26px;border:1px solid var(--line);background:var(--space-1);height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;position:relative;overflow:hidden}
+.logo-card .lc-label{position:absolute;bottom:16px;left:18px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim)}
+.logo-card.light{background:#f2f2f5;border-color:#e2e2e8}
+.logo-card .mark-lg{width:96px;height:96px;filter:drop-shadow(0 0 22px rgba(255,255,255,.35))}
+.logo-card.light .mark-lg{filter:drop-shadow(0 0 12px rgba(0,0,0,.18))}
+.lockup{display:flex;align-items:center;gap:16px}
+.lockup .mark-sm{width:46px;height:46px;filter:drop-shadow(0 0 14px rgba(255,255,255,.35))}
+.lockup .lk-word{font-size:30px;font-weight:800;letter-spacing:.16em;background:var(--grad-logo);-webkit-background-clip:text;background-clip:text;color:transparent}
+.app-icon{width:112px;height:112px;border-radius:30px;background:radial-gradient(circle at 50% 34%,#202027,#050507 72%);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;box-shadow:0 24px 50px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.12)}
+.app-icon .mark-a{width:66px;height:66px;filter:drop-shadow(0 0 18px rgba(255,255,255,.4))}
+
+/* ============ TOKENS ============ */
+.swatches{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+.sw{border-radius:18px;border:1px solid var(--line);overflow:hidden;background:var(--space-1)}
+.sw .chip{height:88px}
+.sw .info{padding:13px 15px}
+.sw .info b{font-size:12px;font-weight:600;display:block;letter-spacing:.02em}
+.sw .info span{font-size:11px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.grad-spec{margin-top:26px;border-radius:22px;border:1px solid var(--line);overflow:hidden}
+.grad-spec .bar{height:86px;background:var(--grad-logo)}
+.grad-spec .meta{padding:16px 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;color:var(--smoke)}
+.grad-spec .meta b{color:#fff;font-weight:600}
+.type-row{margin-top:26px;display:flex;flex-wrap:wrap;align-items:baseline;gap:26px;border-radius:22px;border:1px solid var(--line);padding:30px 30px;background:var(--space-1)}
+.type-row .big{font-size:64px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.type-row .med{font-size:26px;font-weight:600}
+.type-row .sml{font-size:14px;font-weight:300;color:var(--smoke);max-width:300px;line-height:1.7}
+.type-row .fam{margin-left:auto;text-align:right;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);line-height:2.2}
+
+/* ============ FOOTER ============ */
+footer{position:relative;padding:90px 24px 60px;text-align:center;overflow:hidden}
+footer::before{content:"";position:absolute;top:0;left:10%;right:10%;height:1px;background:var(--grad-hair)}
+.foot-mark{width:54px;height:54px;margin:0 auto 22px;opacity:.9;filter:drop-shadow(0 0 18px rgba(255,255,255,.3))}
+.foot-word{font-size:15px;font-weight:700;letter-spacing:.42em;text-transform:uppercase;padding-left:.42em}
+.foot-note{margin-top:14px;font-size:13px;color:var(--smoke);font-weight:300;line-height:1.9}
+.foot-note b{color:#fff;font-weight:500}
+.foot-ver{margin-top:26px;display:inline-flex;gap:10px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);border:1px solid var(--line);border-radius:999px;padding:10px 18px}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:900px){
+  .section{padding:90px 20px}
+  .phone-grid{gap:52px 24px}
+}
+@media (max-width:460px){
+  .phone{width:100%;max-width:390px;height:auto;aspect-ratio:390/844}
+  .hero-title{letter-spacing:.1em}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO ================= -->
+<header class="hero">
+  <div class="hero-bg"><img src="assets/cosmic-hero.jpg" alt=""></div>
+  <div class="starfield" data-stars="120"></div>
+  <div class="hero-inner">
+    <div class="hero-halo"></div>
+
+    <!-- NOVA MARK -->
+    <svg class="nova-mark" viewBox="-110 -110 220 220" aria-label="Nova Browser logo">
+      <defs>
+        <radialGradient id="core" cx="50%" cy="42%" r="62%">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="26%" stop-color="#ececf2"/>
+          <stop offset="55%" stop-color="#8d8d97"/>
+          <stop offset="80%" stop-color="#2c2c33"/>
+          <stop offset="100%" stop-color="#000000"/>
+        </radialGradient>
+        <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity=".55"/>
+          <stop offset="55%" stop-color="#ffffff" stop-opacity=".1"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="ring" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#ffffff" stop-opacity=".75"/>
+          <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="glow" x="-70%" y="-70%" width="240%" height="240%">
+          <feGaussianBlur stdDeviation="5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <circle r="100" fill="url(#halo)"/>
+      <g class="orbit-a"><ellipse rx="92" ry="36" fill="none" stroke="url(#ring)" stroke-width="1.4" transform="rotate(-20)"/></g>
+      <g class="orbit-b"><ellipse rx="84" ry="30" fill="none" stroke="url(#ring)" stroke-width="1.1" stroke-dasharray="3 9" transform="rotate(24)"/></g>
+      <path filter="url(#glow)" fill="url(#core)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+      <path fill="url(#core)" opacity=".9" transform="rotate(45) scale(.4)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+      <circle r="11" fill="#fff" filter="url(#glow)"/>
+    </svg>
+
+    <h1 class="hero-title">NOVA</h1>
+    <div class="hero-sub">Browser</div>
+    <p class="hero-tag">Мобильный браузер, рождённый из тьмы. <strong>Абсолютно чёрные градиенты</strong>, космическая атмосфера и логотип, который светится чёрно-белым градиентом.</p>
+    <div class="badges">
+      <span class="badge">v0.1 · Концепт</span>
+      <span class="badge">Dark Cosmic Theme</span>
+      <span class="badge">iOS · Android</span>
+    </div>
+  </div>
+  <div class="scroll-hint">Дизайн-превью</div>
+</header>
+
+<!-- ================= SCREENS ================= -->
+<section class="section" id="screens">
+  <div class="section-head">
+    <div class="kicker">01 / Интерфейс</div>
+    <h2>Четыре экрана <span class="grad">первой версии</span></h2>
+    <p class="section-desc">Главный экран, браузер, менеджер вкладок и меню. Стеклянные панели парят над чёрным космосом, а монохромный градиент задаёт весь тон.</p>
+  </div>
+
+  <div class="phone-grid">
+
+    <!-- ===== PHONE 1 : HOME ===== -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="island"></div>
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 3.5a10 10 0 0 1 14 0"/><path d="M3.5 6.3a6.4 6.4 0 0 1 9 0"/><path d="M6.2 9a2.7 2.7 0 0 1 3.6 0"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.2" stroke="#fff" stroke-opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#fff"/><path d="M23 4v4a2.2 2.2 0 0 0 0-4z" fill="#fff" fill-opacity=".5"/></svg>
+            </div>
+          </div>
+
+          <div class="scr">
+            <div class="scr-wall"><img src="assets/phone-wallpaper.jpg" alt=""></div>
+            <div class="scr-stars starfield" data-stars="60"></div>
+
+            <div class="home-content">
+              <div class="home-greet"><span class="dot"></span> Добрый вечер, Путник</div>
+
+              <svg class="home-mark" viewBox="-110 -110 220 220">
+                <circle r="100" fill="url(#halo)"/>
+                <path filter="url(#glow)" fill="url(#core)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+                <path fill="url(#core)" opacity=".9" transform="rotate(45) scale(.4)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+                <circle r="11" fill="#fff" filter="url(#glow)"/>
+              </svg>
+
+              <div class="home-word">NOVA</div>
+              <div class="home-tag">Серфите за горизонт</div>
+
+              <div class="search-pill">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8e8e98" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+                <span class="ph">Поиск или введите URL</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8e8e98" stroke-width="1.7" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8e8e98" stroke-width="1.7" stroke-linecap="round"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.4"/><path d="M8 6l1.6-2.4h4.8L16 6"/></svg>
+              </div>
+
+              <div class="quick-row">
+                <div class="quick">
+                  <div class="quick-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="14" height="14" rx="3"/><path d="M17 10l4-2.5v9L17 14"/></svg></div>
+                  <div class="quick-lb">Видео</div>
+                </div>
+                <div class="quick">
+                  <div class="quick-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></div>
+                  <div class="quick-lb">Почта</div>
+                </div>
+                <div class="quick">
+                  <div class="quick-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg></div>
+                  <div class="quick-lb">Новости</div>
+                </div>
+                <div class="quick">
+                  <div class="quick-ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 21s-7-5.4-7-11a7 7 0 0 1 14 0c0 5.6-7 11-7 11z"/><circle cx="12" cy="10" r="2.6"/></svg></div>
+                  <div class="quick-lb">Карты</div>
+                </div>
+              </div>
+
+              <div class="home-note">Nova Engine · Защита включена</div>
+            </div>
+
+            <div class="toolbar">
+              <div class="tb-btn dimmed"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></div>
+              <div class="tb-btn dimmed"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></div>
+              <div class="tb-btn"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3l8 4v5c0 4.6-3.2 8.2-8 9-4.8-.8-8-4.4-8-9V7z"/></svg></div>
+              <div class="tb-btn"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="4" y="6" width="12" height="12" rx="3"/><path d="M8 3h10a3 3 0 0 1 3 3v10"/></svg><span class="tb-badge">3</span></div>
+              <div class="tb-btn"><svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor"><circle cx="5.5" cy="12" r="1.9"/><circle cx="12" cy="12" r="1.9"/><circle cx="18.5" cy="12" r="1.9"/></svg></div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+      <div class="phone-caption">
+        <div class="no">Экран 01</div>
+        <div class="nm">Главная</div>
+        <div class="ds">Новая вкладка · поиск · быстрый доступ</div>
+      </div>
+    </div>
+
+    <!-- ===== PHONE 2 : BROWSE ===== -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="island"></div>
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 3.5a10 10 0 0 1 14 0"/><path d="M3.5 6.3a6.4 6.4 0 0 1 9 0"/><path d="M6.2 9a2.7 2.7 0 0 1 3.6 0"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.2" stroke="#fff" stroke-opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#fff"/><path d="M23 4v4a2.2 2.2 0 0 0 0-4z" fill="#fff" fill-opacity=".5"/></svg>
+            </div>
+          </div>
+
+          <div class="scr" style="background:#000">
+            <div class="scr-stars starfield" data-stars="34"></div>
+
+            <div class="site">
+              <div class="site-top">
+                <div class="site-brand">
+                  <svg class="m" viewBox="-110 -110 220 220"><path fill="#fff" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/></svg>
+                  Nova News
+                </div>
+                <div class="site-menu-dots">•••</div>
+              </div>
+
+              <div class="site-kicker">Космос · Фото дня</div>
+              <h3 class="site-h1">Туманность Ориона: снимок нового поколения</h3>
+              <div class="site-meta"><span>Сегодня, 08:14</span><span>·</span><span>5 мин чтения</span></div>
+
+              <div class="site-hero-img">
+                <div class="bg"></div>
+                <div class="starfield" data-stars="40"></div>
+                <div class="cap">Телескоп Nova-1 · снимок в инфракрасном диапазоне</div>
+              </div>
+
+              <p class="site-p">Орбитальный телескоп передал новый снимок туманности — самая детальная монохромная карта звёздного детского сада за всю историю наблюдений.</p>
+              <p class="site-p">Учёные выделили более четырёх тысяч молодых звёзд, скрытых ранее пылевыми облаками.</p>
+
+              <div class="site-quote">«Свет начинается там, где заканчивается темнота».</div>
+            </div>
+
+            <div class="progress"><i></i></div>
+            <div class="bottom-bar">
+              <div class="tb-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M15 5l-7 7 7 7"/></svg></div>
+              <div class="tb-btn dimmed"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></div>
+              <div class="url-pill">
+                <svg class="lock" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8fe8b8" stroke-width="2" stroke-linecap="round"><rect x="5" y="10.5" width="14" height="10" rx="2.6"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+                <span class="dom">nova.space</span><span style="color:#77777f">/news</span>
+              </div>
+              <div class="tb-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.8-5.3-2.8-5.3 2.8 1.1-5.8-4.3-4.1 5.9-.8z"/></svg></div>
+              <div class="tb-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><rect x="4" y="6" width="12" height="12" rx="3"/><path d="M8 3h10a3 3 0 0 1 3 3v10"/></svg><span class="tb-badge">3</span></div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+      <div class="phone-caption">
+        <div class="no">Экран 02</div>
+        <div class="nm">Браузер</div>
+        <div class="ds">Страница открыта · панель снизу</div>
+      </div>
+    </div>
+
+    <!-- ===== PHONE 3 : TABS ===== -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="island"></div>
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 3.5a10 10 0 0 1 14 0"/><path d="M3.5 6.3a6.4 6.4 0 0 1 9 0"/><path d="M6.2 9a2.7 2.7 0 0 1 3.6 0"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.2" stroke="#fff" stroke-opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#fff"/><path d="M23 4v4a2.2 2.2 0 0 0 0-4z" fill="#fff" fill-opacity=".5"/></svg>
+            </div>
+          </div>
+
+          <div class="scr">
+            <div class="scr-wall"><img src="assets/phone-wallpaper.jpg" alt=""></div>
+            <div class="scr-stars starfield" data-stars="55"></div>
+
+            <div class="tabs-scr">
+              <div class="tabs-head">
+                <div class="tabs-title">Вкладки</div>
+                <div class="tabs-close">Закрыть все</div>
+              </div>
+
+              <div class="tabs-grid">
+                <div class="tab-card active">
+                  <div class="tab-head"><div class="fav"></div><div class="tab-name">Туманность Ориона — Nova News</div><div class="tab-x">×</div></div>
+                  <div class="tab-prev"><div class="mini-stars starfield" data-stars="16"></div><div class="mini-hero"></div><div class="mini-line"></div><div class="mini-line w2"></div><div class="mini-line w3"></div></div>
+                </div>
+                <div class="tab-card">
+                  <div class="tab-head"><div class="fav d2"></div><div class="tab-name">Nova Browser — Главная</div><div class="tab-x">×</div></div>
+                  <div class="tab-prev"><div class="mini-stars starfield" data-stars="16"></div><div class="mini-hero" style="background:linear-gradient(90deg,rgba(255,255,255,.5),rgba(255,255,255,.08))"></div><div class="mini-line"></div><div class="mini-line w2"></div></div>
+                </div>
+                <div class="tab-card">
+                  <div class="tab-head"><div class="fav d3"></div><div class="tab-name">github.com — репозитории</div><div class="tab-x">×</div></div>
+                  <div class="tab-prev"><div class="mini-hero" style="top:14px;height:8px"></div><div class="mini-line" style="top:52px"></div><div class="mini-line w2" style="top:64px"></div><div class="mini-line w3" style="top:76px"></div></div>
+                </div>
+                <div class="tab-card tab-new">
+                  <div class="plus"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+                  <div class="lbl">Новая вкладка</div>
+                </div>
+              </div>
+
+              <div class="fab"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+      <div class="phone-caption">
+        <div class="no">Экран 03</div>
+        <div class="nm">Вкладки</div>
+        <div class="ds">Менеджер вкладок в космосе</div>
+      </div>
+    </div>
+
+    <!-- ===== PHONE 4 : MENU ===== -->
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="island"></div>
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <svg width="17" height="11" viewBox="0 0 17 11" fill="#fff"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+              <svg width="16" height="11" viewBox="0 0 16 11" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><path d="M1 3.5a10 10 0 0 1 14 0"/><path d="M3.5 6.3a6.4 6.4 0 0 1 9 0"/><path d="M6.2 9a2.7 2.7 0 0 1 3.6 0"/></svg>
+              <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x="0.5" y="0.5" width="21" height="11" rx="3.2" stroke="#fff" stroke-opacity=".5"/><rect x="2" y="2" width="16" height="8" rx="2" fill="#fff"/><path d="M23 4v4a2.2 2.2 0 0 0 0-4z" fill="#fff" fill-opacity=".5"/></svg>
+            </div>
+          </div>
+
+          <div class="scr">
+            <div class="menu-scr">
+              <div class="menu-backdrop"></div>
+              <div class="menu-ghost">
+                <div class="ghost-line s"></div>
+                <div class="ghost-block"></div>
+                <div class="ghost-line"></div>
+                <div class="ghost-line"></div>
+                <div class="ghost-line s"></div>
+              </div>
+
+              <div class="sheet">
+                <div class="handle"></div>
+                <div class="menu-title">Меню</div>
+
+                <div class="menu-grid">
+                  <div class="mi">
+                    <div class="mi-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></div>
+                    <div class="mi-lb">Новая<br>вкладка</div>
+                  </div>
+                  <div class="mi">
+                    <div class="mi-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4.5l3 2"/></svg></div>
+                    <div class="mi-lb">История</div>
+                  </div>
+                  <div class="mi">
+                    <div class="mi-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1.1 5.8-5.3-2.8-5.3 2.8 1.1-5.8-4.3-4.1 5.9-.8z"/></svg></div>
+                    <div class="mi-lb">Закладки</div>
+                  </div>
+                  <div class="mi">
+                    <div class="mi-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 4v11m0 0l-4-4m4 4l4-4"/><path d="M5 19h14"/></svg></div>
+                    <div class="mi-lb">Загрузки</div>
+                  </div>
+                  <div class="mi">
+                    <div class="mi-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg></div>
+                    <div class="mi-lb">Инкогнито</div>
+                  </div>
+                  <div class="mi">
+                    <div class="mi-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 16V4m0 0L8 8m4-4l4 4"/><path d="M5 20h14"/></svg></div>
+                    <div class="mi-lb">Поделиться</div>
+                  </div>
+                  <div class="mi">
+                    <div class="mi-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 3.5v2.4M12 18.1v2.4M3.5 12h2.4M18.1 12h2.4M6 6l1.7 1.7M16.3 16.3L18 18M18 6l-1.7 1.7M7.7 16.3L6 18"/></svg></div>
+                    <div class="mi-lb">Настройки</div>
+                  </div>
+                  <div class="mi">
+                    <div class="mi-ic"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.2 8.2 0 0 1 9.5 4 8.2 8.2 0 1 0 20 14.5z"/></svg></div>
+                    <div class="mi-lb">Ночной<br>режим</div>
+                  </div>
+                </div>
+
+                <div class="ultra">
+                  <div class="ultra-in">
+                    <svg class="ultra-mark" viewBox="-110 -110 220 220"><path fill="#fff" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/><circle r="13" fill="#fff"/></svg>
+                    <div class="ultra-tx"><b>Nova Ultra</b><span>Звёздная скорость · приватность</span></div>
+                    <div class="ultra-btn">Попробовать</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="home-indicator"></div>
+        </div>
+      </div>
+      <div class="phone-caption">
+        <div class="no">Экран 04</div>
+        <div class="nm">Меню</div>
+        <div class="ds">Быстрые действия · Nova Ultra</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= LOGO SYSTEM ================= -->
+<section class="section" id="logo">
+  <div class="section-head">
+    <div class="kicker">02 / Айдентика</div>
+    <h2>Логотип, <span class="grad">светящийся градиентом</span></h2>
+    <p class="section-desc">Звезда-сверхновая: белое ядро плавно перетекает в чёрный край, а ореол свечения делает знак живым. Работает на чёрном, на белом и в иконке приложения.</p>
+  </div>
+
+  <div class="logo-grid">
+    <div class="logo-card">
+      <svg class="mark-lg" viewBox="-110 -110 220 220">
+        <circle r="100" fill="url(#halo)"/>
+        <path filter="url(#glow)" fill="url(#core)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+        <path fill="url(#core)" opacity=".9" transform="rotate(45) scale(.4)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+        <circle r="11" fill="#fff" filter="url(#glow)"/>
+      </svg>
+      <div class="lc-label">Знак · свечение</div>
+    </div>
+
+    <div class="logo-card light">
+      <svg class="mark-lg" viewBox="-110 -110 220 220">
+        <defs>
+          <radialGradient id="coreRev" cx="50%" cy="42%" r="62%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="26%" stop-color="#d9d9df"/>
+            <stop offset="55%" stop-color="#6c6c76"/>
+            <stop offset="80%" stop-color="#1c1c22"/>
+            <stop offset="100%" stop-color="#000000"/>
+          </radialGradient>
+        </defs>
+        <path fill="url(#coreRev)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+        <path fill="url(#coreRev)" opacity=".9" transform="rotate(45) scale(.4)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+        <circle r="11" fill="#fff"/>
+      </svg>
+      <div class="lc-label" style="color:#8a8a93">Знак · инверсия</div>
+    </div>
+
+    <div class="logo-card">
+      <div class="lockup">
+        <svg class="mark-sm" viewBox="-110 -110 220 220">
+          <circle r="100" fill="url(#halo)"/>
+          <path filter="url(#glow)" fill="url(#core)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+          <path fill="url(#core)" opacity=".9" transform="rotate(45) scale(.4)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+          <circle r="11" fill="#fff" filter="url(#glow)"/>
+        </svg>
+        <div class="lk-word">NOVA</div>
+      </div>
+      <div class="lc-label">Лого-локап</div>
+    </div>
+
+    <div class="logo-card">
+      <div class="app-icon">
+        <svg class="mark-a" viewBox="-110 -110 220 220">
+          <circle r="100" fill="url(#halo)"/>
+          <path filter="url(#glow)" fill="url(#core)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+          <path fill="url(#core)" opacity=".9" transform="rotate(45) scale(.4)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+          <circle r="11" fill="#fff" filter="url(#glow)"/>
+        </svg>
+      </div>
+      <div class="lc-label">Иконка приложения</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TOKENS ================= -->
+<section class="section" id="tokens">
+  <div class="section-head">
+    <div class="kicker">03 / Дизайн-токены</div>
+    <h2>Палитра <span class="grad">и типографика</span></h2>
+    <p class="section-desc">Абсолютный чёрный как основа, стекло и серебро как свет. Только монохром — цвет появляется лишь у контента.</p>
+  </div>
+
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:#000000"></div><div class="info"><b>Пустота</b><span>#000000 · фон</span></div></div>
+    <div class="sw"><div class="chip" style="background:#0b0b10"></div><div class="info"><b>Космос</b><span>#0B0B10 · панели</span></div></div>
+    <div class="sw"><div class="chip" style="background:#121218"></div><div class="info"><b>Туманность</b><span>#121218 · карточки</span></div></div>
+    <div class="sw"><div class="chip" style="background:#8e8e98"></div><div class="info"><b>Дым</b><span>#8E8E98 · текст</span></div></div>
+    <div class="sw"><div class="chip" style="background:#f5f5f7"></div><div class="info"><b>Лёд</b><span>#F5F5F7 · заголовки</span></div></div>
+    <div class="sw"><div class="chip" style="background:radial-gradient(circle at 50% 45%,#fff, #dcdce2 30%, #6f6f7a 62%, #101014 100%)"></div><div class="info"><b>Свечение</b><span>Ч/б градиент · лого</span></div></div>
+  </div>
+
+  <div class="grad-spec">
+    <div class="bar"></div>
+    <div class="meta"><span><b>Логотип-градиент</b> · сверху вниз</span><span>#FFFFFF → #DCDCE2 → #6F6F7A → #101014</span></div>
+  </div>
+
+  <div class="type-row">
+    <div class="big">Аа</div>
+    <div class="med">Nova Browser —<br>интерфейс и заголовки</div>
+    <div class="sml">Inter 300 / 500 / 700 / 800. Тесный трекинг в заголовках, широкий — в микро-лейблах.</div>
+    <div class="fam">Inter<br>300 · 500 · 700 · 800</div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <div class="starfield" data-stars="70"></div>
+  <svg class="foot-mark" viewBox="-110 -110 220 220">
+    <circle r="100" fill="url(#halo)"/>
+    <path filter="url(#glow)" fill="url(#core)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+    <path fill="url(#core)" opacity=".9" transform="rotate(45) scale(.4)" d="M0,-96 C11,-35 35,-11 96,0 C35,11 11,35 0,96 C-11,35 -35,11 -96,0 C-35,-11 -11,-35 0,-96 Z"/>
+    <circle r="11" fill="#fff" filter="url(#glow)"/>
+  </svg>
+  <div class="foot-word">Nova Browser</div>
+  <p class="foot-note"><b>Первая версия дизайна готова.</b><br>Дальше: экран загрузки, настройки, анимации переходов и тач-прототип.</p>
+  <div class="foot-ver"><span>Design v0.1</span><span>·</span><span>Dark Cosmic</span><span>·</span><span>2026</span></div>
+</footer>
+
+<script>
+// ---- starfield generator ----
+document.querySelectorAll('[data-stars]').forEach(function (el) {
+  var n = parseInt(el.getAttribute('data-stars'), 10) || 60;
+  var frag = document.createDocumentFragment();
+  for (var i = 0; i < n; i++) {
+    var s = document.createElement('span');
+    s.className = 'star';
+    var size = Math.random() * 2 + 0.6;
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.setProperty('--dur', (Math.random() * 3 + 2).toFixed(2) + 's');
+    s.style.setProperty('--delay', (Math.random() * 4).toFixed(2) + 's');
+    s.style.opacity = (Math.random() * 0.5 + 0.15).toFixed(2);
+    frag.appendChild(s);
+  }
+  el.appendChild(frag);
+});
+</script>
+</body>
+</html>
