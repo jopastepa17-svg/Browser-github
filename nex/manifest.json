@@ -1,0 +1,41 @@
+{
+  "name": "Nex Browser",
+  "short_name": "Nex",
+  "description": "Приватный мобильный браузер: блокировка рекламы до загрузки, режим чтения, три темы.",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
+  "background_color": "#fafaf8",
+  "theme_color": "#fafaf8",
+  "categories": ["utilities", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    {
+      "name": "Новая приватная вкладка",
+      "short_name": "Инкогнито",
+      "url": "./index.html#stealth",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "История",
+      "short_name": "История",
+      "url": "./index.html#history",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Nex Shield",
+      "short_name": "Shield",
+      "url": "./index.html#shield",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

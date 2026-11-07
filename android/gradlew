@@ -1,0 +1,27 @@
+#!/bin/sh
+
+#
+# gradlew — минимальная POSIX-обёртка Gradle (эквивалент стандартного скрипта).
+# Запускает org.gradle.wrapper.GradleWrapperMain из gradle/wrapper/gradle-wrapper.jar.
+#
+
+APP_HOME=$(cd "$(dirname "$0")" && pwd -P)
+CLASSPATH="$APP_HOME/gradle/wrapper/gradle-wrapper.jar"
+
+if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+  JAVACMD="$JAVA_HOME/bin/java"
+else
+  JAVACMD=java
+fi
+
+if ! command -v "$JAVACMD" >/dev/null 2>&1; then
+  echo "ОШИБКА: JDK не найден. Установите JDK 17+ или задайте JAVA_HOME." >&2
+  exit 1
+fi
+
+exec "$JAVACMD" \
+  -Xmx64m -Xms64m \
+  "-Dorg.gradle.appname=gradlew" \
+  -classpath "$CLASSPATH" \
+  org.gradle.wrapper.GradleWrapperMain \
+  "$@"

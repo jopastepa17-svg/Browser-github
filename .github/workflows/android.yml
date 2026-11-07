@@ -1,0 +1,94 @@
+name: Android APK
+
+on:
+  push:
+    paths:
+      - 'android/**'
+      - '.github/workflows/android.yml'
+  pull_request:
+    paths:
+      - 'android/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build debug APK
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platforms;android-34 build-tools;34.0.0 platform-tools'
+
+      - name: Resolve GeckoView version
+        id: gecko
+        run: |
+          set -euo pipefail
+          URL="https://maven.mozilla.org/maven2/org/mozilla/geckoview/geckoview/maven-metadata.xml"
+          VER=$(curl -fsSL "$URL" | grep -o '<version>128\.[^<]*</version>' | tail -1 | sed -E 's/<\/?version>//g')
+          if [ -z "${VER:-}" ]; then
+            VER=$(curl -fsSL "$URL" | grep -o '<latest>[^<]*</latest>' | sed -E 's/<\/?latest>//g')
+          fi
+          if [ -z "${VER:-}" ]; then
+            VER="128.0.20240909110342"
+            echo "::warning::Не удалось прочитать maven-metadata, используем запасную версию $VER"
+          fi
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+          echo "GeckoView: $VER"
+
+      - name: Pin GeckoView version
+        run: |
+          cd android
+          python3 - "${{ steps.gecko.outputs.version }}" <<'PY'
+          import re, sys, pathlib
+          ver = sys.argv[1]
+          p = pathlib.Path('gradle.properties')
+          text = p.read_text(encoding='utf-8')
+          text = re.sub(r'(?m)^geckoviewVersion=.*$', 'geckoviewVersion=' + ver, text)
+          p.write_text(text, encoding='utf-8')
+          print('geckoviewVersion pinned to', ver)
+          PY
+
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('android/**/*.gradle.kts', 'android/gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-${{ runner.os }}-
+
+      - name: Build debug
+        working-directory: android
+        run: |
+          set -o pipefail
+          chmod +x gradlew
+          if [ -f gradle/wrapper/gradle-wrapper.jar ]; then
+            ./gradlew --no-daemon --stacktrace :app:assembleDebug
+          else
+            gradle --no-daemon --stacktrace :app:assembleDebug
+          fi
+
+      - name: Collect APK
+        run: |
+          mkdir -p out
+          find android/app/build/outputs/apk -name '*.apk' -exec cp {} out/ \;
+          ls -lh out
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nex-browser-debug-apk
+          path: out/*.apk
+          if-no-files-found: error
+          retention-days: 30
